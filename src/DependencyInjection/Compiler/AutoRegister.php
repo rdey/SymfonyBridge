@@ -2,6 +2,7 @@
 
 namespace SimpleBus\SymfonyBridge\DependencyInjection\Compiler;
 
+use SimpleBus\Message\Name\NamedMessage;
 use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 
@@ -63,6 +64,10 @@ final class AutoRegister implements CompilerPassInterface
 
                     // get the class name
                     $handles = $parameters[0]->getClass()->getName();
+
+                    if (is_a($handles, NamedMessage::class, true)) {
+                        $handles = $handles::messageName();
+                    }
 
                     $tagAttributes[] = [
                         $this->tagAttribute => $handles,
